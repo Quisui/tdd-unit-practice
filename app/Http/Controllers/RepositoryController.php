@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Repository;
 use Illuminate\Http\Request;
 
 class RepositoryController extends Controller
@@ -34,6 +35,7 @@ class RepositoryController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate(['url' => 'required|url', 'description' => 'required']);
         $request->user()->repositories()->create($request->all());
         return redirect()->route('repositories.index');
     }
@@ -67,19 +69,29 @@ class RepositoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Repository $repository)
     {
-        //
+        $request->validate(['url' => 'required|url', 'description' => 'required']);
+
+        if($request->user()->id != $repository->user_id) {
+            abort(403);
+        }
+
+        $repository->update($request->all());
+
+        return redirect()->route('repositories.edit', $repository);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Repository  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Repository $repository)
     {
-        //
+        $repository->delete();
+
+        return redirect()->route('repositories.index');
     }
 }
