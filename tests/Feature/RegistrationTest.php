@@ -34,7 +34,7 @@ class RegistrationTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_new_users_can_register()
+    /* public function test_new_users_can_register()
     {
         if (! Features::enabled(Features::registration())) {
             return $this->markTestSkipped('Registration support is not enabled.');
@@ -50,5 +50,5 @@ class RegistrationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(RouteServiceProvider::HOME);
-    }
+    } */
 }
